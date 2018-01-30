@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>Notify Object</Title>
+      <Author>Matthias Shapiro</Author>
+      <Description>The calls necessary for a notify object</Description>
+      <HelpUrl></HelpUrl>
+      <Shortcut>notifyProp</Shortcut>
+    </Header>
+    <Snippet>
+      <Declarations>
+	<Literal Editable="true">
+          <ID>NotifyPropName</ID>
+          <ToolTip>The name of the notify property</ToolTip>
+          <Default>MyProperty</Default>
+          <Function>
+          </Function>
+        </Literal>
+        <Literal Editable="true">
+          <ID>NotifyType</ID>
+          <ToolTip>A title for the Uri you're using to call the request</ToolTip>
+          <Default>string</Default>
+          <Function>
+          </Function>
+        </Literal>
+	<Literal Editable="true">
+          <ID>PrivateNotifyProp</ID>
+          <ToolTip>the private part of the notify property</ToolTip>
+          <Default>_myProperty</Default>
+          <Function>
+          </Function>
+        </Literal>   
+	<Literal Editable="true">
+          <ID>InitialValue</ID>
+          <ToolTip>the initial value of the notify property</ToolTip>
+          <Default>"initial value"</Default>
+          <Function>
+          </Function>
+        </Literal>       
+      </Declarations>
+      <Code Language="csharp"><![CDATA[#region $NotifyPropName$ ($NotifyType$)
+        private $NotifyType$ $PrivateNotifyProp$ = $InitialValue$;
+        public $NotifyType$ $NotifyPropName$
+        {
+            get { return $PrivateNotifyProp$; }
+            set
+            {
+                $PrivateNotifyProp$ = value;
+                NotifyPropertyChanged("$NotifyPropName$");
+            }
+        }
+        #endregion]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

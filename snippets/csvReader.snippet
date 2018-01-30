@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>Load and Read a Csv File</Title>
+      <Author>Matthias Shapiro</Author>
+      <Description>load and read a csv file</Description>
+      <Shortcut>csvReader</Shortcut>
+    </Header>
+    <Snippet>
+        <Declarations>
+          <Literal Editable="true">
+            <ID>filelocation</ID>
+            <ToolTip>the name of the file we'd like to save this object into</ToolTip>
+            <Default>"mySavedCsv.csv"</Default>
+            <Function>
+            </Function>
+          </Literal>
+      </Declarations>
+      <Code Language="csharp"><![CDATA[// This snippet requires the CsvParse.cs file from https://github.com/matthiasxc/uwp-kickstart
+        StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+        var csvItem = await localFolder.TryGetItemAsync($filelocation$);
+        if(csvItem != null)
+        {
+          StorageFile file = await localFolder.GetFileAsync($filelocation$);
+          using (CsvParse.CsvFileReader csvReader = new CsvParse.CsvFileReader(await file.OpenStreamForReadAsync()))
+          {
+              CsvParse.CsvRow row = new CsvParse.CsvRow();
+              while (csvReader.ReadRow(row))
+              {
+                //use row[i] to reference a given column from the row
+              }
+          }
+        }]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

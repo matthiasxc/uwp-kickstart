@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>Basic ViewModel </Title>
+      <Author>Matthias Shapiro</Author>
+      <Description>The basic outline of an MVVM Light ViewModel</Description>
+      <HelpUrl>http://www.mvvmlight.net</HelpUrl>
+      <Shortcut>mvvmvmbasic</Shortcut>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal Editable="true">
+          <ID>rootnamespace</ID>
+          <ToolTip>The namespace for this ViewModel</ToolTip>
+          <Default>ViewModelProject.ViewModels</Default>
+          <Function>
+          </Function>
+        </Literal>
+      <Literal Editable="true">
+          <ID>fileinputname</ID>
+          <ToolTip>The type name for this object type</ToolTip>
+          <Default>NewViewModel</Default>
+          <Function>
+          </Function>
+        </Literal>
+      </Declarations>
+      <Code Language="csharp"><![CDATA[using System;
+using System.Threading.Tasks;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
+using GalaSoft.MvvmLight.Threading;
+using GalaSoft.MvvmLight.Views;
+using Microsoft.Practices.ServiceLocation;
+
+namespace $rootnamespace$
+{
+    /// <summary>
+    /// This class contains properties that the main View can data bind to.
+    /// <para>
+    /// See http://www.mvvmlight.net
+    /// </para>
+    /// </summary>
+    
+    #region [move to ViewModelLocator]
+    // Move this to the ViewModelLocator Constructor
+    SimpleIoc.Default.Register<$fileinputname$>();    
+
+    /// <summary>
+    /// Gets the Main property.
+    /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+        "CA1822:MarkMembersAsStatic",
+        Justification = "This non-static member is needed for data binding purposes.")]
+    public $fileinputname$ $fileinputname$Instance => ServiceLocator.Current.GetInstance<$fileinputname$>();
+    #endregion 
+
+    public class $fileinputname$ : ViewModelBase
+    {
+        private readonly IDataService _dataService;
+        private readonly INavigationService _navigationService;
+        private RelayCommand<string> _navigateCommand;
+        private RelayCommand _sendMessageCommand;
+        private RelayCommand _showDialogCommand;
+        private string _welcomeTitle = string.Empty;
+
+        public RelayCommand<string> NavigateCommand
+        {
+            get
+            {
+                return _navigateCommand
+                       ?? (_navigateCommand = new RelayCommand<string>(
+                           p => _navigationService.NavigateTo(ViewModelLocator.SecondPageKey, p),
+                           p => !string.IsNullOrEmpty(p)));
+            }
+        }
+
+        public RelayCommand SendMessageCommand
+        {
+            get
+            {
+                return _sendMessageCommand
+                    ?? (_sendMessageCommand = new RelayCommand(
+                    () =>
+                    {
+                        Messenger.Default.Send(
+                            new NotificationMessageAction<string>(
+                                "Testing",
+                                reply =>
+                                {
+                                    WelcomeTitle = reply;
+                                }));
+                    }));
+            }
+        }
+
+        public string WelcomeTitle
+        {
+            get { return _welcomeTitle; }
+
+            set { Set(ref _welcomeTitle, value); }
+        }
+
+        public $fileinputname$(
+            IDataService dataService,
+            INavigationService navigationService)
+        {
+            _dataService = dataService;
+            _navigationService = navigationService;
+            Initialize();
+        }
+
+        private async Task Initialize()
+        {
+            try
+            {
+                var item = await _dataService.GetData();
+                WelcomeTitle = item.Title;
+            }
+            catch (Exception ex)
+            {
+                // Report error here
+                WelcomeTitle = ex.Message;
+            }
+        }
+    }
+}]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

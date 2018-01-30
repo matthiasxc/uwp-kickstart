@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>Load and Save a Json Object to the App's Local Folder</Title>
+      <Author>Matthias Shapiro</Author>
+      <Description>A boolean to visibility converter for XAML projects</Description>
+      <Shortcut>converterBoolean</Shortcut>
+    </Header>
+    <Snippet>
+        <Declarations>
+          <Literal Editable="true">
+            <ID>persistentobject</ID>
+            <ToolTip>the object variable we will be using as a pointer in the app</ToolTip>
+            <Default>persistentObject</Default>
+            <Function>
+            </Function>
+          </Literal>
+          <Literal Editable="true">
+            <ID>objecttype</ID>
+            <ToolTip>the type of the object we're loading and saving</ToolTip>
+            <Default>string</Default>
+            <Function>
+            </Function>
+          </Literal>
+          <Literal Editable="true">
+            <ID>objectinit</ID>
+            <ToolTip>initialize the object that we're saving / loading</ToolTip>
+            <Default>"[object to save]"</Default>
+            <Function>
+            </Function>
+          </Literal>
+          <Literal Editable="true">
+            <ID>filepointer</ID>
+            <ToolTip>the name of the file we'd like to save this object into</ToolTip>
+            <Default>persistentObjectFile</Default>
+            <Function>
+            </Function>
+          </Literal>
+          <Literal Editable="true">
+            <ID>filelocation</ID>
+            <ToolTip>the name of the file we'd like to save this object into</ToolTip>
+            <Default>"mySavedFile.json"</Default>
+            <Function>
+            </Function>
+          </Literal>
+      </Declarations>
+      <Code Language="csharp"><![CDATA[// This snippet requires JSON.NET
+        StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+        $objecttype$ $persistentobject$ = $objectinit$;
+        string $filepointer$ = $filelocation$;
+
+        private async Task SaveObject()
+        {            
+            StorageFile file = await localFolder.CreateFileAsync($filepointer$, CreationCollisionOption.OpenIfExists);
+            await Windows.Storage.FileIO.WriteTextAsync(file, JsonConvert.SerializeObject($persistentobject$));
+        }
+
+        private async Task LoadObject()
+        {
+            var fileItem = await localFolder.TryGetItemAsync($filepointer$);
+
+            if (fileItem != null)
+            {
+                var file = await localFolder.GetFileAsync($filepointer$);
+
+                string jsonString = await Windows.Storage.FileIO.ReadTextAsync(file);
+
+                persistentObject = JsonConvert.DeserializeObject<$objecttype$>(jsonString);
+            }
+        }]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

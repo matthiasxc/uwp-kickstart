@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>StringFormatter Converter</Title>
+      <Author>Matthias Shapiro</Author>
+      <Description>A converter to allow string formatting in bindings for XAML projects</Description>
+      <Shortcut>converterStringFormat</Shortcut>
+    </Header>
+    <Snippet>
+      <Declarations>
+      </Declarations>
+      <Code Language="csharp"><![CDATA[public class StringFormatConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            var format = parameter as string;
+
+            if (!String.IsNullOrEmpty(format))
+            {
+                format = format.Replace("\\", string.Empty);
+                string formatSample = String.Format(format, value);
+                return formatSample;
+            }
+
+            return value;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

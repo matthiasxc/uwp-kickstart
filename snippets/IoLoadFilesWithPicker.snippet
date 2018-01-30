@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>Load Multiple Files With a FilePicker UI</Title>
+      <Author>Matthias Shapiro</Author>
+      <Description>load and read a csv file</Description>
+      <Shortcut>IoLoadFilesWithPicker</Shortcut>
+    </Header>
+    <Snippet>
+        <Declarations>
+          <Literal Editable="true">
+            <ID>methodname</ID>
+            <ToolTip>name for the method</ToolTip>
+            <Default>LoadFilesWithPicker</Default>
+            <Function>
+            </Function>
+          </Literal>
+        <Literal Editable="true">
+            <ID>filetype</ID>
+            <ToolTip>they file type we want to restrict the picker to</ToolTip>
+            <Default>".csv"</Default>
+            <Function>
+            </Function>
+          </Literal>
+      </Declarations>
+      <Code Language="csharp"><![CDATA[private async Task $methodname$()
+        {
+            var picker = new Windows.Storage.Pickers.FileOpenPicker();
+            picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.List;
+            picker.FileTypeFilter.Add($filetype$);
+
+            var files = await picker.PickMultipleFilesAsync();
+
+            List<string> fileTokens = new List<string>();
+
+            foreach (StorageFile file in files)
+            {
+                fileTokens.Add(StorageApplicationPermissions.FutureAccessList.Add(file));
+            }
+            
+            // Save fileTokens in the LocalFolder to maintain file access and 
+            //  re-load these picked files after an app restart
+        }]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>
