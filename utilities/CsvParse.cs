@@ -67,7 +67,7 @@ namespace CsvParse
         /// </summary>
         /// <param name="row"></param>
         /// <returns></returns>
-        public bool ReadRow(CsvRow row)
+        public bool ReadRow(CsvRow row, Char sep)
         {
             row.LineText = ReadLine();
             if (String.IsNullOrEmpty(row.LineText))
@@ -113,7 +113,7 @@ namespace CsvParse
                 {
                     // Parse unquoted value
                     int start = pos;
-                    while (pos < row.LineText.Length && row.LineText[pos] != ',')
+                    while (pos < row.LineText.Length && row.LineText[pos] != sep)
                         pos++;
                     value = row.LineText.Substring(start, pos - start);
                 }
@@ -126,7 +126,7 @@ namespace CsvParse
                 rows++;
 
                 // Eat up to and including next comma
-                while (pos < row.LineText.Length && row.LineText[pos] != ',')
+                while (pos < row.LineText.Length && row.LineText[pos] != sep)
                     pos++;
                 if (pos < row.LineText.Length)
                     pos++;
